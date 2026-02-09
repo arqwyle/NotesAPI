@@ -1,0 +1,7 @@
+﻿services:
+  notesapi:
+    image: notesapi
+    build:
+      context: .
+      dockerfile: NotesAPI/Dockerfile
+
