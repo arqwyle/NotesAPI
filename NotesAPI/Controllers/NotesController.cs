@@ -9,6 +9,11 @@ namespace NotesAPI.Controllers;
 [Route("[controller]")]
 public class NotesController(INoteService noteService, ICacheService cacheService) : ControllerBase
 {
+    /// <summary>
+    /// Получает все заметки.
+    /// Данные кешируются на 5 минут для уменьшения нагрузки на БД.
+    /// </summary>
+    /// <returns>Список всех заметок в формате DTO.</returns>
     [HttpGet]
     public async Task<ActionResult<List<NoteDto>>> GetAll()
     {
@@ -28,6 +33,12 @@ public class NotesController(INoteService noteService, ICacheService cacheServic
         return Ok(noteDtos);
     }
 
+    /// <summary>
+    /// Получает заметку по уникальному идентификатору.
+    /// Отдельно кешируется каждая заметка на 10 минут.
+    /// </summary>
+    /// <param name="id">Уникальный идентификатор заметки.</param>
+    /// <returns>Заметка в формате DTO или 404, если не найдена.</returns>
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<NoteDto>> GetById(Guid id)
     {
@@ -48,6 +59,12 @@ public class NotesController(INoteService noteService, ICacheService cacheServic
         return Ok(noteDto);
     }
 
+    /// <summary>
+    /// Создаёт новую заметку.
+    /// После создания инвалидируется кеш списка всех заметок.
+    /// </summary>
+    /// <param name="dto">Данные для создания заметки.</param>
+    /// <returns>Созданная заметка с кодом 201 Created.</returns>
     [HttpPost]
     public async Task<ActionResult<NoteCreateDto>> Create(NoteCreateDto dto)
     {
@@ -61,6 +78,13 @@ public class NotesController(INoteService noteService, ICacheService cacheServic
         return CreatedAtAction(nameof(GetById), new { id = note.Id }, dto);
     }
 
+    /// <summary>
+    /// Обновляет существующую заметку по идентификатору.
+    /// Инвалидирует кеш как самой заметки, так и общего списка.
+    /// </summary>
+    /// <param name="id">Идентификатор обновляемой заметки.</param>
+    /// <param name="dto">Новые данные заметки.</param>
+    /// <returns>Код 204 NoContent при успехе или 404, если заметка не найдена.</returns>
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Update(Guid id, NoteCreateDto dto)
     {
@@ -79,6 +103,12 @@ public class NotesController(INoteService noteService, ICacheService cacheServic
         return NoContent();
     }
 
+    /// <summary>
+    /// Удаляет заметку по идентификатору.
+    /// Инвалидирует кеш удалённой заметки и общего списка.
+    /// </summary>
+    /// <param name="id">Идентификатор удаляемой заметки.</param>
+    /// <returns>Код 204 NoContent при успехе или 404, если заметка не найдена.</returns>
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id)
     {
