@@ -1,0 +1,21 @@
+# This is a generated file. Not intended for manual editing.
+services:
+  notesapi:
+    build:
+      context: "C:\\Users\\yurik2004rus\\envelope\\NotesAPI"
+      dockerfile: "NotesAPI/Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net10.0/NotesAPI.dll"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "notesapi:dev"
+    ports: []
+    volumes:
+    - "C:\\Users\\yurik2004rus\\envelope\\NotesAPI\\NotesAPI:/app:rw"
+    - "C:\\Users\\yurik2004rus\\envelope\\NotesAPI:/src:rw"
+    - "C:\\Users\\yurik2004rus\\.nuget\\packages:/home/app/.nuget/packages"
+    working_dir: "/app"
